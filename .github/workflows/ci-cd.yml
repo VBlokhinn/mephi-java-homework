@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "feature/**" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build, Test & Package Personal Finance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and Test personal-finance
+        run: ./gradlew :personal-finance:build --info
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: personal-finance-binaries
+          path: |
+            personal-finance/build/libs/*.jar
+            personal-finance/build/distributions/*.zip
+          retention-days: 7
