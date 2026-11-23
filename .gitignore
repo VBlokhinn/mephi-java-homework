@@ -18,3 +18,6 @@ out/
 # App data
 data/
 **/data/
+
+# Allow evidence logs for prompt engineering project
+!prompt-engineering-todo/evidence/*.log

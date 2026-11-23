@@ -1,0 +1,11 @@
+=== TEST T02 ===
+Status: PASSED
+Return Code: 0
+Expected Output:
+EMPTY
+BYE
+Actual Output:
+EMPTY
+BYE
+Stderr:
+

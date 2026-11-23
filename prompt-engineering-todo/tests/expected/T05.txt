@@ -1,0 +1,5 @@
+ADDED 1
+DONE 1
+1. [X] Сделать зарядку
+ALREADY_DONE 1
+BYE

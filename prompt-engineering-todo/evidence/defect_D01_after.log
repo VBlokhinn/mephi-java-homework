@@ -1,0 +1,18 @@
+=== DEFECT D01 VERIFICATION AFTER FIX ===
+Status: PASSED
+Input:
+add Первая задача
+done 1
+exit
+
+Expected output:
+ADDED 1
+DONE 1
+BYE
+
+Actual output:
+ADDED 1
+DONE 1
+BYE
+
+Return code: 0

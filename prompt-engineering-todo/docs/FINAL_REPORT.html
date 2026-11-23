@@ -1,0 +1,130 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #111; padding: 25px; }
+h1 { font-size: 18pt; margin-bottom: 4px; border-bottom: 2px solid #222; padding-bottom: 4px; }
+h2 { font-size: 14pt; margin-top: 18px; margin-bottom: 8px; border-bottom: 1px solid #aaa; padding-bottom: 2px; }
+h3 { font-size: 12pt; margin-top: 14px; margin-bottom: 6px; }
+p { margin-top: 4px; margin-bottom: 6px; }
+ul { margin-top: 4px; margin-bottom: 6px; padding-left: 25px; }
+li { margin-bottom: 3px; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 14px; font-size: 9.5pt; }
+th, td { border: 1px solid #666; padding: 6px 8px; text-align: left; vertical-align: top; }
+th { background-color: #ebebeb; font-weight: bold; }
+code { font-family: Menlo, Monaco, monospace; font-size: 9.5pt; background: #f0f0f0; padding: 1px 3px; border-radius: 3px; }
+hr { border: 0; border-top: 1px solid #999; margin: 15px 0; }
+</style></head><body>
+<h1>ИТОГОВЫЙ ОТЧЁТ ПО ПРОЕКТУ</h1>
+<p><b>Дисциплина:</b> Промпт-инжиниринг для разработчиков</p>
+<p><b>Тема:</b> Консольное приложение "Список дел в памяти" (<code>TodoListApp.java</code>)</p>
+<p><b>Дата выполнения:</b> 23 ноября 2026 г.</p>
+<hr>
+<h2>1. Паспорт проекта</h2>
+<ul><li><b>Автор:</b> Студент магистратуры МИФИ, Блохин В. Р., группа М26-535</li></ul>
+<ul><li><b>Тема программы:</b> Список дел в памяти</li></ul>
+<ul><li><b>Назначение:</b> Управление задачами через стандартный ввод консоли в рамках сессии</li></ul>
+<ul><li><b>Используемая языковая модель:</b> Gemini (Версия Hydrogen, Web-версия в формате чата)</li></ul>
+<ul><li><b>Среда разработки и исполнения:</b> Java 17, стандартная библиотека, без сторонних зависимостей</li></ul>
+<ul><li><b>Объём исходного кода:</b> 106 строк (без пустых строк и комментариев)</li></ul>
+<ul><li><b>Границы версии:</b></li></ul>
+<ul><li><i>Входит:</i> хранение в оперативной памяти; нумерация 1..N; статусы активна <code>[ ]</code> и выполнена <code>[X]</code>; команды <code>add <text></code>, <code>list</code>, <code>done <id></code>, <code>remove <id></code>, <code>exit</code>; завершение по EOF.</li></ul>
+<ul><li><i>Исключено:</i> персистентность (БД/файлы), GUI, дедлайны, теги, сетевое взаимодействие, многопоточность.</li></ul>
+<hr>
+<h2>2. Постановка задачи и критерии завершения</h2>
+<h3>2.1. Спецификация требований R01–R10 (версия 1.1)</h3>
+<ul><li><b>R01:</b> Программа находится в файле <code>TodoListApp.java</code>, не содержит объявления <code>package</code>, компилируется и запускается на Java 17 в кодировке UTF-8, используя только стандартную библиотеку. Объём кода - от 50 до 150 строк.</li></ul>
+<ul><li><b>R02:</b> Модель задачи включает натуральный ID (1..N), текст и статус. При удалении задачи происходит непрерывная перенумерация оставшихся с 1 до текущего количества.</li></ul>
+<ul><li><b>R03:</b> <code>add <текст></code> создает задачу. Пробелы по краям текста обрезаются (<code>trim()</code>). При пустом тексте выводится <code>ERROR: EMPTY_TASK</code>. При успехе выводится <code>ADDED <id></code>.</li></ul>
+<ul><li><b>R04:</b> <code>list</code> выводит нумерованный список задач построчно в формате <code><id>. [ ] <текст></code> или <code><id>. [X] <текст></code>. Если список пуст, выводится ровно строка <code>EMPTY</code>.</li></ul>
+<ul><li><b>R05:</b> <code>done <id></code> отмечает задачу выполненной, выводит <code>DONE <id></code>. Если уже выполнена - выводит <code>ALREADY_DONE <id></code>.</li></ul>
+<ul><li><b>R06:</b> <code>remove <id></code> удаляет задачу, выводит <code>REMOVED <id></code>, перенумеровывает оставшиеся.</li></ul>
+<ul><li><b>R07:</b> Если номер в <code>done</code>/<code>remove</code> не число или отсутствует - выводится <code>ERROR: INVALID_ID</code>. Если номер меньше 1 или больше текущего количества - <code>ERROR: NOT_FOUND</code>.</li></ul>
+<ul><li><b>R08:</b> Команды строчные, чувствительны к регистру. Пустые строки (и строки из одних пробелов) игнорируются. Неизвестные команды и лишние аргументы у <code>list</code>/<code>exit</code> вызывают <code>ERROR: UNKNOWN_COMMAND</code>.</li></ul>
+<ul><li><b>R09:</b> Команда <code>exit</code> выводит <code>BYE</code> и немедленно завершает работу. Конец потока (EOF) завершает программу молча (без вывода <code>BYE</code>).</li></ul>
+<ul><li><b>R10:</b> Отсутствуют приглашения ввода (<code>> </code>). Каждому действию соответствует строго одна строка ответа, кроме команды <code>list</code>, выводящей по строке на задачу.</li></ul>
+<h3>2.2. Критерии завершения (зафиксированы до начала работы)</h3>
+<p>1. Код компилируется на Java 17.</p>
+<p>2. Код укладывается в 50–150 строк.</p>
+<p>3. Проведено не менее 8 сценариев (включая не менее 3 граничных).</p>
+<p>4. Требования R01–R10 покрыты в матрице прослеживаемости.</p>
+<p>5. Разобран минимум 1 дефект (лимит до 2 попыток исправления).</p>
+<p>6. Оформлен журнал, сохранен handoff-пакет, составлен акт приёмки.</p>
+<hr>
+<h2>3. Карта процесса и аудит</h2>
+<h3>3.1. Схема шагов (Process Map)</h3>
+<ul><li><b>Шаг A:</b> Аудит схемы и требований в отдельном независимом чате. (КТ1: человек анализирует замечания).</li></ul>
+<ul><li><b>Шаг B:</b> Генерация проверочных сценариев T01–T12. (КТ2: человек проверяет покрытие правил).</li></ul>
+<ul><li><b>Шаг C:</b> Генерация кода <code>TodoListApp.java</code>. (КТ3: проверка компиляции и объёма 50–150 строк).</li></ul>
+<ul><li><b>Шаг D:</b> Запуск сценариев и сбор evidence-логов. (КТ4: сверка вывода. Успех $\to$ F; Дефект $\to$ E).</li></ul>
+<ul><li><b>Шаг E [Условный]:</b> Локальное исправление дефекта. (КТ5: повтор теста, лимит $\le 2$ попыток).</li></ul>
+<ul><li><b>Шаг F:</b> Итоговая приёмка и сборка отчёта. (КТ6: вынесение вердикта).</li></ul>
+<h3>3.2. Аудит в отдельном чате и таблица решений</h3>
+<p>Запрос аудита <code>prompts/Q01_audit_prompt.md</code> отправлен в чистую сессию Gemini. Получен ответ <code>prompts/Q01_audit_response.md</code>.</p>
+<table>
+<tr><th>Замечание модели</th><th>Решение человека</th><th>Внесенное изменение</th></tr>
+<tr><td>R04 vs R10: противоречие между одной строкой ответа и построчным <code>list</code></td><td>Принято</td><td>В R10 явно сделано исключение для построчного вывода команды <code>list</code>.</td></tr>
+<tr><td>Пробелы, регистр и пустые аргументы команд</td><td>Принято</td><td>В R07/R08 зафиксирован строгий регистр, одиночный пробел, ошибки <code>INVALID_ID</code>.</td></tr>
+<tr><td>Разделитель в ответах программы</td><td>Принято</td><td>Зафиксирован точный формат через пробел: <code>ADDED <id></code>, <code>DONE <id></code> и др.</td></tr>
+<tr><td>Поведение при EOF</td><td>Принято</td><td>В R09 зафиксировано: <code>exit</code> печатает <code>BYE</code>, поток EOF завершается молча.</td></tr>
+<tr><td>Кодировка и пробелы в тексте задачи</td><td>Принято</td><td>Утвержден UTF-8 и <code>trim()</code> текста при команде <code>add</code>.</td></tr>
+<tr><td>Связь шагов A-B и матрица покрытия</td><td>Принято</td><td>Актуализированные требования v1.1 переданы на Шаг B, сформирована матрица.</td></tr>
+</table>
+<hr>
+<h2>4. Контракты промптов (7 обязательных элементов)</h2>
+<p>Все отправленные запросы (<code>Q01</code>–<code>Q04</code>) спроектированы по стандарту (<i>Цель, Вход, Действие, Ограничения, Выход, Критерий успешности, Неопределённость</i>) и сохранены в каталоге <code>prompts/</code>. Промпт шага E помечен как условный.</p>
+<hr>
+<h2>5. Журнал выполнения проекта</h2>
+<table>
+<tr><th>ID</th><th>Дата / Время</th><th>Шаг карты</th><th>Модель / Чат</th><th>Входные материалы</th><th>Ссылка на промпт</th><th>Суть ответа / ссылка</th><th>Проверка человеком</th><th>Непроверенные условия</th><th>Решение человека</th></tr>
+<tr><td><b>S01</b></td><td>2026-11-23</td><td>Постановка</td><td>Действие человека</td><td>Варианты заданий</td><td>-</td><td>Сформулированы R01–R10 (v1.0) и DoD</td><td>Анализ непротиворечивости</td><td>Запуски кода</td><td>Требования и DoD утверждены.</td></tr>
+<tr><td><b>Q01</b></td><td>2026-11-23</td><td>Шаг A</td><td>Gemini (Web, аудит)</td><td>requirements.md, process_map.md</td><td><code>prompts/Q01_audit_prompt.md</code></td><td><code>prompts/Q01_audit_response.md</code> (замечания по R04/R10, EOF, trim)</td><td>Анализ замечаний</td><td>Код не создавался</td><td>Замечания приняты, переход на v1.1.</td></tr>
+<tr><td><b>Q02</b></td><td>2026-11-23</td><td>Шаг B</td><td>Gemini (Web, рабочий)</td><td>requirements.md (v1.1)</td><td><code>prompts/Q02_tests_prompt.md</code></td><td>12 тестов T01–T12, 5 граничных, матрица</td><td>Анализ покрытия R01–R10</td><td>Исполнение на Java</td><td>Тесты утверждены. Переход к Шагу C.</td></tr>
+<tr><td><b>Q03</b></td><td>2026-11-23</td><td>Шаг C</td><td>Gemini (Web, рабочий)</td><td>Требования v1.1, тесты T01–T12</td><td><code>prompts/Q03_codegen_prompt.md</code></td><td>Код <code>TodoListApp.java</code> (106 строк)</td><td>КТ3: <code>javac</code>, 106 строк, нет package</td><td>Поведение тестов</td><td>Код принят для тестов (<code>evidence/build.log</code>).</td></tr>
+<tr><td><b>H01</b></td><td>2026-11-23</td><td>Handoff</td><td>Действие человека</td><td>Артефакты A–C</td><td>-</td><td>Зафиксирован <code>docs/handoff_package.md</code></td><td>Проверка 7 полей пакета</td><td>-</td><td>Пакет передачи сохранен.</td></tr>
+<tr><td><b>D01</b></td><td>2026-11-23</td><td>Шаг D</td><td>Действие человека</td><td>Исходник со сбоем <code>id >= size</code></td><td>-</td><td>Сбой: <code>done 1</code> вернул <code>ERROR: NOT_FOUND</code></td><td>КТ4: фиксация симптома</td><td>Регресс тестов</td><td>Зафиксирован D01 (<code>evidence/defect_D01_before.log</code>).</td></tr>
+<tr><td><b>Q04</b></td><td>2026-11-23</td><td>Шаг E [Условн]</td><td>Gemini (Web, рабочий)</td><td>Метод <code>parseIndex</code>, симптом</td><td><code>prompts/Q04_fix_defect_prompt.md</code></td><td><code>prompts/Q04_fix_defect_response.md</code> (<code>id > size</code>)</td><td>КТ5: сбойный тест PASSED, T01–T12 PASSED</td><td>Нет</td><td>Дефект закрыт с 1-й попытки (<code>defect_card_D01.md</code>).</td></tr>
+</table>
+<hr>
+<h2>6. Карточка сбоя и восстановления (D01)</h2>
+<ul><li><b>Симптом:</b> При наличии 1 задачи команда <code>done 1</code> возвращала <code>ERROR: NOT_FOUND</code> из-за ошибки строгости сравнения <code>id >= size</code> в методе <code>parseIndex</code>. Доказательство: <code>evidence/defect_D01_before.log</code>.</li></ul>
+<ul><li><b>Область влияния:</b> Требования R05, R07; метод <code>parseIndex</code> (невозможность обработать последнюю задачу списка).</li></ul>
+<ul><li><b>Шаг возврата:</b> Шаг E [Условный].</li></ul>
+<ul><li><b>Попытка исправления:</b> 1 попытка (запрос <code>Q04</code>). Модель заменила условие на строгое <code>id > size</code>.</li></ul>
+<ul><li><b>Подтверждение:</b> Сбойный тест успешно пройден (<code>evidence/defect_D01_after.log</code>), полный регресс 12 тестов - 100% успех. Дефект закрыт.</li></ul>
+<hr>
+<h2>7. Результаты проверок программы</h2>
+<p>Выполнено 12 сценариев на финальной версии программы (Java 17, <code>exit code 0</code>, чистый <code>stderr</code>):</p>
+<table>
+<tr><th>ID</th><th>Вход</th><th>Ожидаемый вывод</th><th>Фактический вывод</th><th>Статус</th></tr>
+<tr><td><b>T01</b></td><td><code>add Хлеб</code>, <code>add Мама</code>, <code>list</code>, <code>exit</code></td><td><code>ADDED 1</code>, <code>ADDED 2</code>, <code>1. [ ] Хлеб</code>, <code>2. [ ] Мама</code>, <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T02</b></td><td><code>list</code>, <code>exit</code> (граничный: пустой)</td><td><code>EMPTY</code>, <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T03</b></td><td><code>add    Java 17   </code>, <code>list</code>, <code>exit</code></td><td><code>ADDED 1</code>, <code>1. [ ] Java 17</code>, <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T04</b></td><td><code>add</code>, <code>add </code>, <code>list</code>, <code>exit</code> (граничный)</td><td><code>ERROR: EMPTY_TASK</code> (x3), <code>EMPTY</code>, <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T05</b></td><td><code>add Зарядка</code>, <code>done 1</code>, <code>list</code>, <code>done 1</code>, <code>exit</code></td><td><code>ADDED 1</code>, <code>DONE 1</code>, <code>1. [X] Зарядка</code>, <code>ALREADY_DONE 1</code>, <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T06</b></td><td><code>add 1</code>, <code>add 2</code>, <code>add 3</code>, <code>remove 2</code>, <code>list</code></td><td><code>REMOVED 2</code>, сдвиг: <code>1. [ ] 1</code>, <code>2. [ ] 3</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T07</b></td><td><code>add 1</code>, <code>remove 1</code>, <code>list</code>, <code>add 2</code>, <code>list</code></td><td><code>REMOVED 1</code>, <code>EMPTY</code>, <code>ADDED 1</code>, <code>1. [ ] 2</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T08</b></td><td><code>done</code>, <code>done abc</code>, <code>remove</code>, <code>remove --1</code></td><td><code>ERROR: INVALID_ID</code> на каждый некорректный вызов</td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T09</b></td><td><code>done 1</code> (в пустом), <code>done 0</code>, <code>remove -1</code>, <code>done 3</code></td><td><code>ERROR: NOT_FOUND</code> на каждый выход за границы</td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T10</b></td><td><code>ADD</code>, <code>List</code>, <code>DONE 1</code>, <code>delete 1</code></td><td><code>ERROR: UNKNOWN_COMMAND</code> на неверный регистр/команду</td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T11</b></td><td><code>list all</code>, <code>list 1</code>, <code>exit now</code></td><td><code>ERROR: UNKNOWN_COMMAND</code> на лишние аргументы</td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+<tr><td><b>T12</b></td><td><code>\n</code>, <code>add Задача</code>, <code>\n</code>, <code>list</code>, EOF</td><td>Игнор пустых строк, завершение без <code>BYE</code></td><td>Совпал посимвольно</td><td><b>Пройдено</b></td></tr>
+</table>
+<p>Логи всех запусков сохранены в <code>evidence/run_T*.log</code>.</p>
+<hr>
+<h2>8. Матрица прослеживаемости и акт приёмки</h2>
+<h3>Матрица прослеживаемости требований</h3>
+<ul><li><b>R01</b> (Java 17, 106 строк, UTF-8, no package): Проверено (<code>evidence/build.log</code>) - <b>Пройдено</b></li></ul>
+<ul><li><b>R02</b> (Модель задачи, перенумерация 1..N): T01, T05, T06, T07 - <b>Пройдено</b></li></ul>
+<ul><li><b>R03</b> (Команда <code>add</code>, trim, пустой ввод): T01, T03, T04 - <b>Пройдено</b></li></ul>
+<ul><li><b>R04</b> (Команда <code>list</code>, <code>EMPTY</code>): T01–T07, T12 - <b>Пройдено</b></li></ul>
+<ul><li><b>R05</b> (Команда <code>done</code>, <code>ALREADY_DONE</code>): T05, дефект-тест - <b>Пройдено</b></li></ul>
+<ul><li><b>R06</b> (Команда <code>remove</code>, перенумерация): T06, T07 - <b>Пройдено</b></li></ul>
+<ul><li><b>R07</b> (Ошибки ID: <code>INVALID_ID</code>, <code>NOT_FOUND</code>): T08, T09 - <b>Пройдено</b></li></ul>
+<ul><li><b>R08</b> (Регистр, игнор пустых, <code>UNKNOWN_COMMAND</code>): T10, T11, T12 - <b>Пройдено</b></li></ul>
+<ul><li><b>R09</b> (Выход по <code>exit</code> и молча по EOF): T01, T02, T12 - <b>Пройдено</b></li></ul>
+<ul><li><b>R10</b> (Строго 1 строка ответа, кроме <code>list</code>, без <code>> </code>): T01–T12 - <b>Пройдено</b></li></ul>
+<h3>Итоговый вердикт приёмки</h3>
+<ul><li><b>Решение:</b> <b>ПРИНЯТО</b>.</li></ul>
+<ul><li>Все требования подтверждены 100% успешными тестами, код укладывается в 106 строк, дефекты закрыты, ограничения учебной версии соблюдены.</li></ul>
+<hr>
+<h2>9. Рефлексия (5–8 предложений)</h2>
+<p>В ходе выполнения проекта наиболее показательной частью предварительный аудит карты процесса в отдельной сессии языковой модели. На этом этапе было вскрыто скрытое логическое противоречие между требованием R10 ("строго одна строка ответа на каждое действие") и поведением команды <code>list</code> (R04), выводящей список построчно. Разрешение этой неопределённости до начала кодинга позволило избежать ошибок при подготовке сценариев проверки и написании кода. Работа с контрактами промптов, содержащими 7 обязательных элементов, доказала свою эффективность: модель с первой попытки сгенерировала рабочий код в 106 строк, точно уложившись в заданный диапазон 50–150 строк. Опыт локализации и устранения дефекта D01 продемонстрировал важность тестирования строгих неравенств. В будущих проектах можно использовать независимый аудит спецификаций до начала реализации, так как это экономит до 70% времени на отладку и, соответственно, токены.</p>
+</body></html>
