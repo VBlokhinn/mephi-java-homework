@@ -1,11 +1,9 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /build
 
-COPY gradlew settings.gradle.kts build.gradle.kts ./
-COPY gradle/ gradle/
-COPY personal-finance/ personal-finance/
+COPY . .
 
-RUN chmod +x gradlew && ./gradlew :personal-finance:installDist --no-daemon
+RUN chmod +x gradlew && ./gradlew :personal-finance:installDist --no-daemon --info
 
 FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
