@@ -19,6 +19,25 @@
 ./gradlew :personal-finance:run --console=plain -q
 ```
 
+## 🐳 Запуск через Docker
+
+Образ приложения собирается автоматически через GitHub Actions и публикуется в GitHub Container Registry (GHCR).
+
+1. Скачать опубликованный образ:
+```bash
+docker pull ghcr.io/vblokhinn/mephi-java-homework/personal-finance:latest
+```
+
+2. Запустить контейнер в интерактивном режиме:
+```bash
+docker run -it --rm ghcr.io/vblokhinn/mephi-java-homework/personal-finance:latest
+```
+
+Локальная сборка образа:
+```bash
+docker build -t personal-finance:latest .
+```
+
 ## Команды консоли
 | Команда | Описание | Пример |
 |---|---|---|

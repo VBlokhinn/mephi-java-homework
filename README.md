@@ -18,3 +18,17 @@
 | 3 | **Итоговый проект: Сервис коротких ссылок (URL Shortener)** | Сервис сокращения URL с UUID-идентификацией, лимитами переходов, автоматической очисткой по TTL, переходом в браузер, конфигурацией и набором unit/интеграционных тестов. | Модуль [:url-shortener](url-shortener/README.md) (`feature/final-url-shortener`) | Выполнено |
 | 4 | **Итоговый проект ПООП: Система управления личными финансами** | Учет доходов и расходов, управление бюджетами категорий, оповещения о перерасходе и 80% лимита, сохранение в JSON, экспорт/импорт CSV. | Модуль [:personal-finance](personal-finance/README.md) (`feature/oop-personal-finance`) | Выполнено |
 
+---
+
+## 🐳 Docker и CI/CD (GitHub Actions)
+В репозитории настроен автоматический конвейер CI/CD (`.github/workflows/ci-cd.yml`):
+1. **Тестирование (`test`)**: прогон всех unit- и integration-тестов Gradle.
+2. **Сборка (`build`)**: компиляция и выгрузка бинарных артефактов (JAR/ZIP).
+3. **Контейнеризация (`docker`)**: сборка multi-stage Dockerfile и публикация в GitHub Container Registry (GHCR).
+
+### Запуск опубликованного Docker-образа
+```bash
+docker pull ghcr.io/vblokhinn/mephi-java-homework/personal-finance:latest
+docker run -it --rm ghcr.io/vblokhinn/mephi-java-homework/personal-finance:latest
+```
+

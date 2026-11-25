@@ -1,0 +1,12 @@
+target/
+build/
+.gradle/
+.git/
+.gitignore
+.idea/
+*.iml
+.vscode/
+Dockerfile*
+README*
+docker-compose*.yml
+prompt-engineering-todo/
