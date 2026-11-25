@@ -1,0 +1,21 @@
+=== TEST T06 ===
+Status: PASSED
+Return Code: 0
+Expected Output:
+ADDED 1
+ADDED 2
+ADDED 3
+REMOVED 2
+1. [ ] Первая
+2. [ ] Третья
+BYE
+Actual Output:
+ADDED 1
+ADDED 2
+ADDED 3
+REMOVED 2
+1. [ ] Первая
+2. [ ] Третья
+BYE
+Stderr:
+

@@ -1,0 +1,6 @@
+add Первая
+add Вторая
+add Третья
+remove 2
+list
+exit

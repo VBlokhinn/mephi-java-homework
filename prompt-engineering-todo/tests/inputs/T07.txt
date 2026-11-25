@@ -1,0 +1,6 @@
+add Единственная
+remove 1
+list
+add Новая
+list
+exit

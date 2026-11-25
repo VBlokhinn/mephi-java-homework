@@ -1,0 +1,19 @@
+=== TEST T07 ===
+Status: PASSED
+Return Code: 0
+Expected Output:
+ADDED 1
+REMOVED 1
+EMPTY
+ADDED 1
+1. [ ] Новая
+BYE
+Actual Output:
+ADDED 1
+REMOVED 1
+EMPTY
+ADDED 1
+1. [ ] Новая
+BYE
+Stderr:
+

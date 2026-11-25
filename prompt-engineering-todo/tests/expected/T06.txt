@@ -1,0 +1,7 @@
+ADDED 1
+ADDED 2
+ADDED 3
+REMOVED 2
+1. [ ] Первая
+2. [ ] Третья
+BYE

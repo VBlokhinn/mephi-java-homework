@@ -1,0 +1,5 @@
+add Сделать зарядку
+done 1
+list
+done 1
+exit

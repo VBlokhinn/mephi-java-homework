@@ -1,0 +1,6 @@
+ADDED 1
+REMOVED 1
+EMPTY
+ADDED 1
+1. [ ] Новая
+BYE

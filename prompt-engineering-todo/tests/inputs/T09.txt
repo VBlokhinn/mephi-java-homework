@@ -1,0 +1,8 @@
+done 1
+add Задача 1
+add Задача 2
+done 0
+remove -1
+done 3
+remove 3
+exit

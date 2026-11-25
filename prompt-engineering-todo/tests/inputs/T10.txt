@@ -1,0 +1,7 @@
+ADD Тест
+List
+DONE 1
+REMOVE 1
+EXIT
+delete 1
+exit

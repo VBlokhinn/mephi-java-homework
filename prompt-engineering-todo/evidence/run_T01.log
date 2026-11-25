@@ -1,0 +1,17 @@
+=== TEST T01 ===
+Status: PASSED
+Return Code: 0
+Expected Output:
+ADDED 1
+ADDED 2
+1. [ ] Купить хлеб
+2. [ ] Позвонить маме
+BYE
+Actual Output:
+ADDED 1
+ADDED 2
+1. [ ] Купить хлеб
+2. [ ] Позвонить маме
+BYE
+Stderr:
+
